@@ -30,7 +30,7 @@ const CONFIG = {
 };
 
 // Run game
-new Runner('.interstitial-wrapper', CONFIG);
+const runner = new Runner('.interstitial-wrapper', CONFIG);
 
 // Lesson 3: Dark Mode feature (client-side flag)
 const darkMode = new DarkMode
@@ -40,6 +40,9 @@ ldclient.on('ready', function() {
   ldclient.variation('dark-mode', false) ?
     darkMode.enableFeature() :
     darkMode.disableFeature();
+
+  // Lesson 3.1: Sets gravitational pull
+  runner.updateConfigSetting('GRAVITY', ldclient.variation('gravity', 0.6));
 })
 
 // Listen to flag change in real-time
@@ -47,4 +50,9 @@ ldclient.on('change:dark-mode', (isFeatureEnabled) => (
   isFeatureEnabled ?
     darkMode.enableFeature() :
     darkMode.disableFeature()
+));
+
+// Lesson 3.1: Update gravity settings in real-time
+ldclient.on('change:gravity', gravityCoefficient => (
+  runner.updateConfigSetting('GRAVITY', gravityCoefficient)
 ));
