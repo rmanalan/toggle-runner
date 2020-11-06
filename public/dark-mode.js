@@ -1,4 +1,5 @@
 // Lesson 3: Dark mode feature
+// Check out `public/app.js` to see how this is implemented
 function DarkMode() {
   const buttonLabel = this.isEnabled() ? 'Light mode' : 'Dark mode';
 

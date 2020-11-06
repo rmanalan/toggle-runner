@@ -1,3 +1,10 @@
+// Initialize LaunchDarkly client
+const ldclient = LDClient.initialize(
+  '<get your Client-Side ID from https://app.launchdarkly.com/settings/projects>',
+  { key: 'anon', anonymous: true },
+  { bootstrap: 'localstorage' }
+);
+
 const CONFIG = {
   ACCELERATION: 0.001,
   BG_CLOUD_SPEED: 0.2,
@@ -23,4 +30,21 @@ const CONFIG = {
 };
 
 // Run game
-new Runner('.interstitial-wrapper', CONFIG)
+new Runner('.interstitial-wrapper', CONFIG);
+
+// Lesson 3: Dark Mode feature (client-side flag)
+const darkMode = new DarkMode
+
+// When LD client is ready, evaluate flags
+ldclient.on('ready', function() {
+  ldclient.variation('dark-mode', false) ?
+    darkMode.enableFeature() :
+    darkMode.disableFeature();
+})
+
+// Listen to flag change in real-time
+ldclient.on('change:dark-mode', (isFeatureEnabled) => (
+  isFeatureEnabled ?
+    darkMode.enableFeature() :
+    darkMode.disableFeature()
+));
