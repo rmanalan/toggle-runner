@@ -24,9 +24,15 @@ app.set('view engine', 'ejs')
 app.use(pinoLogger)
 app.use(express.static('public'))
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   req.log.debug('Starting game...')
-  res.render('game')
+  try {
+    const flags = await ldClient.allFlagsState(LD_USER)
+    req.log.debug(flags.allValues(), 'All feature flags')
+    res.render('game', { flags: flags.allValues() })
+  } catch (err) {
+    res.status(500).send('Error occured while retreiving flags')
+  }
 })
 
 app.listen(PORT, () => {

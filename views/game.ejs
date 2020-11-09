@@ -23,11 +23,11 @@
     <div id="resources">
       <img
         id="resources-1x"
-        src="images/100-percent/100-sprite.png"
+        src="images/100-percent/100-sprite<%= flags['space-mode'] ? '-space' : '' %>.png"
       />
       <img
         id="resources-2x"
-        src="images/200-percent/200-sprite.png"
+        src="images/200-percent/200-sprite<%= flags['space-mode'] ? '-space' : '' %>.png"
       />
       <div id="audio-resources">
         <audio id="sound-press" src="sounds/button-press.mp3"></audio>

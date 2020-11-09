@@ -32,8 +32,27 @@ const CONFIG = {
 // Run game
 const runner = new Runner('.interstitial-wrapper', CONFIG);
 
-// Lesson 3: Dark Mode feature (client-side flag)
 const darkMode = new DarkMode
+
+// Lesson 4: Space mode!
+function spaceMode(isSpaceModeOn) {
+  if (isSpaceModeOn) {
+    runner.updateConfigSetting('GRAVITY', ldclient.variation('gravity', 0.6));
+    runner.updateConfigSetting('INVERT_DISTANCE', 0)
+    runner.updateConfigSetting('INVERT_FADE_DURATION', 1000)
+    runner.updateConfigSetting('MAX_CLOUDS', 1)
+    runner.updateConfigSetting('MAX_OBSTACLE_LENGTH', 6)
+    runner.updateConfigSetting('GAP_COEFFICIENT', 5)
+  } else {
+    runner.updateConfigSetting('GRAVITY', CONFIG.GRAVITY);
+    runner.updateConfigSetting('INVERT_DISTANCE', CONFIG.INVERT_DISTANCE)
+    runner.updateConfigSetting('INVERT_FADE_DURATION', CONFIG.INVERT_FADE_DURATION)
+    runner.updateConfigSetting('MAX_CLOUDS', CONFIG.MAX_CLOUDS)
+    runner.updateConfigSetting('MAX_OBSTACLE_LENGTH', CONFIG.MAX_OBSTACLE_LENGTH)
+    runner.updateConfigSetting('GAP_COEFFICIENT', CONFIG.GAP_COEFFICIENT)
+
+  }
+}
 
 // When LD client is ready, evaluate flags
 ldclient.on('ready', function() {
@@ -41,18 +60,19 @@ ldclient.on('ready', function() {
     darkMode.enableFeature() :
     darkMode.disableFeature();
 
-  // Lesson 3.1: Sets gravitational pull
-  runner.updateConfigSetting('GRAVITY', ldclient.variation('gravity', 0.6));
+  spaceMode(ldclient.variation('space-mode', false));
+  runner.updateConfigSetting('GRAVITY', ldclient.variation('gravity', 0.6))
 })
 
 // Listen to flag change in real-time
+ldclient.on('change:gravity', gravityCoefficient => {
+  runner.updateConfigSetting('GRAVITY', gravityCoefficient)
+});
+
 ldclient.on('change:dark-mode', (isFeatureEnabled) => (
   isFeatureEnabled ?
     darkMode.enableFeature() :
     darkMode.disableFeature()
 ));
 
-// Lesson 3.1: Update gravity settings in real-time
-ldclient.on('change:gravity', gravityCoefficient => (
-  runner.updateConfigSetting('GRAVITY', gravityCoefficient)
-));
+ldclient.on('change:space-mode', spaceMode);
